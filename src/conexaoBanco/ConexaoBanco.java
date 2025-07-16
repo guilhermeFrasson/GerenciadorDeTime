@@ -93,6 +93,25 @@ public class ConexaoBanco {
 	            return false;
 	        }
 	    }
+	    public static boolean inserirEstatisticasJogador( int idJogador, int qtdGols, int qtdAssistencias) {
+	    	
+	    	Connection conn = conectar();
+	    	if (conn == null) return false;
+	    	
+	    	String sql = "INSERT INTO ESTATISTICAS (IDJOGO, IDJOGADOR, QTDGOLS, QTDASSISTENCIAS) VALUES (?, ?, ?, ?)";
+	    	
+	    	try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	    		stmt.setInt(1, buscaUltimoJogo());
+	    		stmt.setInt(2, idJogador);
+	    		stmt.setInt(3, qtdGols);
+	    		stmt.setInt(4, qtdAssistencias);
+	    		stmt.executeUpdate();
+	    		return true;
+	    	} catch (SQLException e) {
+	    		e.printStackTrace();
+	    		return false;
+	    	}
+	    }
 	    
 		public static List<String> cdComboBox(String coluna, String tabela) {
 			List<String> combo = new ArrayList<>();
@@ -110,6 +129,46 @@ public class ConexaoBanco {
 			}
 			return combo;
 		}
+
+		public static int buscaUltimoJogo() {
+			int idJogo= 0;
+			String sql = "SELECT TOP 1 * FROM JOGO ORDER BY id DESC";
+			
+			try (Connection conn = ConexaoBanco.conectar(); 
+					PreparedStatement stmt = conn.prepareStatement(sql);
+					ResultSet rs = stmt.executeQuery()) {
+				
+				
+		        while (rs.next()) {
+		        	idJogo = rs.getInt("ID");
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        JOptionPane.showMessageDialog(null, "Erro ao buscar o ultimo jogo no banco.");
+		    }
+			return idJogo;
+		}
+		
+		public static int buscaIdJogador(String nomeJogador) {
+			int idJogador= 0;
+			String sql = "SELECT * FROM JOGADOR WHERE NOME = '" + nomeJogador + "'";
+			
+			try (Connection conn = ConexaoBanco.conectar(); 
+					PreparedStatement stmt = conn.prepareStatement(sql);
+					ResultSet rs = stmt.executeQuery()) {
+				
+				
+		        while (rs.next()) {
+		        	idJogador = rs.getInt("ID");
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        JOptionPane.showMessageDialog(null, "Erro ao buscar o id do jogador no banco.");
+		    }
+			return idJogador;
+		}
+		
+		
 		
 
 	    

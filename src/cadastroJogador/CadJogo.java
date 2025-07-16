@@ -2,6 +2,7 @@ package cadastroJogador;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -11,6 +12,7 @@ import javax.swing.JTextField;
 import Lista.ListMarcadorGols;
 import Tela.Tela;
 import conexaoBanco.ConexaoBanco;
+import objeto.Estatisticas;
 
 public class CadJogo extends Tela{
 	
@@ -24,7 +26,7 @@ public class CadJogo extends Tela{
 		super();
 
 		criarBotaoSoIcone("←", "Voltar", 10, 10, e -> dispose());
-		criarBotaoSoIcone("✅", "Salvar", 330, 10, e -> salvarJogo());
+		criarBotaoSoIcone("✅", "Salvar", 330, 10, e -> salvarDadosJogo());
 		setTitulo("Cadastrar Jogo", 100, 10);
 		
 		
@@ -63,18 +65,21 @@ public class CadJogo extends Tela{
 
         criarBotao("Cadastra Marcadores", 25, 500, 340, 50, e -> {new CadMarcadorGols().setVisible(true);});
         criarBotao("Listar marcador de gol", 25, 570, 340, 50, e -> {new ListMarcadorGols().setVisible(true);});
-        
-
-
     }
 
-    public void salvarJogo() {
+    public void salvarDadosJogo() {
+    	List<Estatisticas> lista = CadMarcadorGols.getListaEstatisticas();
+    	if (lista.size() > 0) {
+			
+		}
     	String timeAdiversario = txtTimeAdiversario.getText().trim();
     	
         String resultado = (String) cdResultado.getSelectedItem();
 
     	String dataTexto = txtDatajogo.getText().trim();
     	LocalDate datajogo;
+    	int qtdGols = 0;
+    	int qtdAssistencias = 0;
     	try {
     	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     	    datajogo = LocalDate.parse(dataTexto, formatter);
@@ -100,38 +105,65 @@ public class CadJogo extends Tela{
     		return;
     	}
 
-    	if (resultado.equals("Vitoria")) {
-    		if (golsFeitos > golsSofridos) {
-    			inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
-			}else {
-	    		JOptionPane.showMessageDialog(this, "O numero de gols marcados tem que ser maior que o numero de gols sofridos");
+		if (resultado.equals("Vitoria")) {
+			if (golsFeitos > golsSofridos) {
+				inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
+				inserirEstatisticasJogador();
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"O numero de gols marcados tem que ser maior que o numero de gols sofridos");
 			}
 		}
     	
-    	if (resultado.equals("Empate")) {
-    		if (golsFeitos == golsSofridos) {
-    			inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
-    		}else {
-	    		JOptionPane.showMessageDialog(this, "O numero de gols marcados tem que ser igual ao numero de gols sofridos");
+		if (resultado.equals("Empate")) {
+			if (golsFeitos == golsSofridos) {
+				inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
+				inserirEstatisticasJogador();
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"O numero de gols marcados tem que ser igual ao numero de gols sofridos");
 			}
-    	}
-    	
-    	if (resultado.equals("Derrota")) {
-    		if (golsFeitos < golsSofridos) {
-    			inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
-    		}else {
-	    		JOptionPane.showMessageDialog(this, "O numero de gols sofridos tem que ser maior que o numero de gols marcados");
+		}
+
+		if (resultado.equals("Derrota") && golsFeitos < golsSofridos) {
+			if (golsFeitos < golsSofridos) {
+				inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
+				inserirEstatisticasJogador();
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"O numero de gols sofridos tem que ser maior que o numero de gols marcados");
 			}
-    	}
-    }
+		}
+	}
+    
     
     public void inserirJogoBd(String timeAdiversario, String resultado, LocalDate dataJogo, int golsFeitos, int golsSofridos) {
-		boolean sucesso = ConexaoBanco.inserirJogo(timeAdiversario, resultado, dataJogo, golsFeitos, golsSofridos);
-    	if (sucesso) {
+		boolean sucessoJogo = ConexaoBanco.inserirJogo(timeAdiversario, resultado, dataJogo, golsFeitos, golsSofridos);
+    	if (sucessoJogo) {
             JOptionPane.showMessageDialog(this, "Jogo cadastrado com sucesso!");
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Erro ao cadastrar jogo.");
         }
+    }
+
+    public void inserirEstatisticasJogador() {
+    	
+    	ConexaoBanco conexaoBanco = new ConexaoBanco();
+
+    	int qtdGols = 0;
+    	int qtdAssistencias = 0;
+    	int idJogador = 0;
+
+		List<Estatisticas> lista = CadMarcadorGols.getListaEstatisticas();
+
+		for (Estatisticas estat : lista) {
+			qtdGols = estat.getGols();
+			qtdAssistencias = estat.getAssistencias();
+			idJogador = conexaoBanco.buscaIdJogador(estat.getNome());
+			conexaoBanco.inserirEstatisticasJogador(idJogador, qtdGols, qtdAssistencias);
+		}
+		lista.clear();
+		
     }
 }

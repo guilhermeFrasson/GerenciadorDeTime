@@ -35,12 +35,12 @@ public class ListJogador extends Tela {
 		    String textoBotao = jogador.getNome() + " - " + jogador.getPosicao();
 
 		    JButton btnJogador = new JButton(textoBotao);
-		    btnJogador.setBounds(0, y, 400, 40); // define posição e tamanho
+		    btnJogador.setBounds(0, y, 400, 40);
 		    btnJogador.setHorizontalAlignment(SwingConstants.LEFT);
 		    btnJogador.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		    btnJogador.addActionListener(e -> {new InfoJogador(jogador).setVisible(true);});
-		    painel.add(btnJogador); // adiciona no painel (ou no JFrame)
-		    y += 40; // espaço entre botões
+		    painel.add(btnJogador); 
+		    y += 40; 
 		    
 		}
 	}

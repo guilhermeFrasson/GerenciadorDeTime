@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import Tela.Tela;
@@ -49,19 +50,25 @@ public class CadMarcadorGols extends Tela {
     }
 
     public void salvarJogadorList() {
+        String nome = (String) cdJogador.getSelectedItem();
+        int gols = 0, assistencias = 0;
+
         try {
-            String nome = (String) cdJogador.getSelectedItem();
-            int gols = Integer.parseInt(txtGols.getText().trim());
-            int assistencias = Integer.parseInt(txtAssistencias.getText().trim());
-
-            Estatisticas estat = new Estatisticas(nome, gols, assistencias);
-            listaEstatisticas.add(estat);
-
-            dispose(); // fecha a tela após salvar
+            gols = Integer.parseInt(txtGols.getText().trim());
         } catch (NumberFormatException e) {
-            System.out.println("Erro: Gols e assistências devem ser números.");
-            // Aqui você pode exibir uma JOptionPane também, se quiser
+            gols = 0;
         }
+        
+        try {
+        	assistencias = Integer.parseInt(txtAssistencias.getText().trim());
+        } catch (NumberFormatException e) {
+        	assistencias = 0;
+        }
+        Estatisticas estat = new Estatisticas(nome, gols, assistencias);
+        listaEstatisticas.add(estat);
+
+        dispose(); 
+        
     }
 
     public static List<Estatisticas> getListaEstatisticas() {
