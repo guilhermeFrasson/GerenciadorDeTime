@@ -11,8 +11,8 @@ public class Estatisticas {
         this.gols = gols;
         this.assistencias = assistencias;
     }
-    
-    public String getNome() {
+
+	public String getNome() {
 		return nome;
 	}
     
@@ -38,6 +38,6 @@ public class Estatisticas {
 
     @Override
     public String toString() {
-        return "Nome: " + nome + " - Gols: " + gols + " - Assistências: " + assistencias;
+        return nome + " - Gols: " + gols + " - Assistências: " + assistencias;
     }
 }

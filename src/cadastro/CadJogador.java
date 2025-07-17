@@ -1,4 +1,4 @@
-package cadastroJogador;
+package cadastro;
 
 
 

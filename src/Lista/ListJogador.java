@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
 
 import Tela.Tela;
 import conexaoBanco.ConexaoBanco;
-import infoJogador.InfoJogador;
+import info.InfoJogador;
 import objeto.Jogador;
 
 public class ListJogador extends Tela {

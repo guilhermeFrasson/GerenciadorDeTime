@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-import cadastroJogador.CadJogador;
+import cadastro.CadJogador;
 
 public class Tela extends JFrame{
 	
@@ -66,6 +66,14 @@ public class Tela extends JFrame{
         botao.addActionListener(acao);
 		return null;
     }
+    
+    public JLabel apresentaInfo(String nomeCampo, Object infoCampo, int posicaoY) {
+    	JLabel lblInformacao = new JLabel(nomeCampo + infoCampo);
+    	lblInformacao.setBounds(20, posicaoY, 300, 30);
+    	painel.add(lblInformacao);
+		return lblInformacao;
+    }
+
     
     
  

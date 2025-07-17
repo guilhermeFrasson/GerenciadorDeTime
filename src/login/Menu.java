@@ -3,8 +3,8 @@ package login;
 import Lista.ListJogador;
 import Lista.ListJogos;
 import Tela.Tela;
-import cadastroJogador.CadJogador;
-import cadastroJogador.CadJogo;
+import cadastro.CadJogador;
+import cadastro.CadJogo;
 
 public class Menu extends Tela {
 

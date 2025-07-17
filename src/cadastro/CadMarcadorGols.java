@@ -1,4 +1,4 @@
-package cadastroJogador;
+package cadastro;
 import java.util.ArrayList;
 import java.util.List;
 

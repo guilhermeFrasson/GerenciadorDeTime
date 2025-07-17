@@ -1,4 +1,4 @@
-package cadastroJogador;
+package cadastro;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +25,7 @@ public class CadJogo extends Tela{
 	public CadJogo() {
 		super();
 
-		criarBotaoSoIcone("←", "Voltar", 10, 10, e -> dispose());
+		criarBotaoSoIcone("�?", "Voltar", 10, 10, e -> dispose());
 		criarBotaoSoIcone("✅", "Salvar", 330, 10, e -> salvarDadosJogo());
 		setTitulo("Cadastrar Jogo", 100, 10);
 		
@@ -162,6 +162,7 @@ public class CadJogo extends Tela{
 			qtdAssistencias = estat.getAssistencias();
 			idJogador = conexaoBanco.buscaIdJogador(estat.getNome());
 			conexaoBanco.inserirEstatisticasJogador(idJogador, qtdGols, qtdAssistencias);
+			conexaoBanco.alterarDadosJogador(idJogador, qtdGols, qtdAssistencias);
 		}
 		lista.clear();
 		

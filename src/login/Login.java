@@ -16,7 +16,7 @@ import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import Tela.Tela;
-import cadastroJogador.CadJogador;
+import cadastro.CadJogador;
 import conexaoBanco.ConexaoBanco;
 
 public class Login extends Tela {

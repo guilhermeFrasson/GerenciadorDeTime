@@ -13,8 +13,7 @@ import javax.swing.SwingConstants;
 
 import Tela.Tela;
 import conexaoBanco.ConexaoBanco;
-import infoJogador.InfoJogador;
-import objeto.Jogador;
+import info.InfoJogo;
 import objeto.Jogo;
 
 public class ListJogos extends Tela{
@@ -38,7 +37,7 @@ public class ListJogos extends Tela{
 		    btnJogo.setBounds(0, y, 400, 40);
 		    btnJogo.setHorizontalAlignment(SwingConstants.LEFT);
 		    btnJogo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-//		    btnJogo.addActionListener(e -> {new InfoJogador(jogo).setVisible(true);});
+		    btnJogo.addActionListener(e -> {new InfoJogo(jogo).setVisible(true);});
 		    painel.add(btnJogo); 
 		    y += 40; 
 		    

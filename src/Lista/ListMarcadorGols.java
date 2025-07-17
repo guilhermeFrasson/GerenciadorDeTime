@@ -5,7 +5,7 @@ import java.util.List;
 import javax.swing.JLabel;
 
 import Tela.Tela;
-import cadastroJogador.CadMarcadorGols;
+import cadastro.CadMarcadorGols;
 import objeto.Estatisticas;
 
 public class ListMarcadorGols extends Tela {
