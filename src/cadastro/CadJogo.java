@@ -25,7 +25,7 @@ public class CadJogo extends Tela{
 	public CadJogo() {
 		super();
 
-		criarBotaoSoIcone("�?", "Voltar", 10, 10, e -> dispose());
+		criarBotaoSoIcone("←", "Voltar", 10, 10, e -> dispose());
 		criarBotaoSoIcone("✅", "Salvar", 330, 10, e -> salvarDadosJogo());
 		setTitulo("Cadastrar Jogo", 100, 10);
 		
@@ -77,14 +77,14 @@ public class CadJogo extends Tela{
         String resultado = (String) cdResultado.getSelectedItem();
 
     	String dataTexto = txtDatajogo.getText().trim();
-    	LocalDate datajogo;
+    	LocalDate dataJogo;
     	int qtdGols = 0;
     	int qtdAssistencias = 0;
     	try {
     	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    	    datajogo = LocalDate.parse(dataTexto, formatter);
+    	    dataJogo = LocalDate.parse(dataTexto, formatter);
     	} catch (Exception e) {
-    	    JOptionPane.showMessageDialog(this, "Data de nascimento inválida!");
+    	    JOptionPane.showMessageDialog(this, "Data do jogo inválida!");
     	    return;
         }
         
@@ -104,36 +104,16 @@ public class CadJogo extends Tela{
     		JOptionPane.showMessageDialog(this, "Digite um número válido para Gols Sofridos.");
     		return;
     	}
-
-		if (resultado.equals("Vitoria")) {
-			if (golsFeitos > golsSofridos) {
-				inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
-				inserirEstatisticasJogador();
-			} else {
-				JOptionPane.showMessageDialog(this,
-						"O numero de gols marcados tem que ser maior que o numero de gols sofridos");
-			}
+		int totalGols = 0;
+		for (Estatisticas e : lista) {
+		    totalGols += e.getGols(); // supondo que tenha o método getGols()
+		}
+		if (golsFeitos == totalGols) {
+			verificaResultado(timeAdiversario, resultado, dataJogo, golsFeitos, golsSofridos);
+		}else {
+			JOptionPane.showMessageDialog(this, "o numero de gols margados no jogo, tem que ser igual a somatória dos gols dos jogadores.");
 		}
     	
-		if (resultado.equals("Empate")) {
-			if (golsFeitos == golsSofridos) {
-				inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
-				inserirEstatisticasJogador();
-			} else {
-				JOptionPane.showMessageDialog(this,
-						"O numero de gols marcados tem que ser igual ao numero de gols sofridos");
-			}
-		}
-
-		if (resultado.equals("Derrota") && golsFeitos < golsSofridos) {
-			if (golsFeitos < golsSofridos) {
-				inserirJogoBd(timeAdiversario, resultado, datajogo, golsFeitos, golsSofridos);
-				inserirEstatisticasJogador();
-			} else {
-				JOptionPane.showMessageDialog(this,
-						"O numero de gols sofridos tem que ser maior que o numero de gols marcados");
-			}
-		}
 	}
     
     
@@ -156,6 +136,8 @@ public class CadJogo extends Tela{
     	int idJogador = 0;
 
 		List<Estatisticas> lista = CadMarcadorGols.getListaEstatisticas();
+		
+
 
 		for (Estatisticas estat : lista) {
 			qtdGols = estat.getGols();
@@ -165,6 +147,45 @@ public class CadJogo extends Tela{
 			conexaoBanco.alterarDadosJogador(idJogador, qtdGols, qtdAssistencias);
 		}
 		lista.clear();
-		
     }
+    
+    
+    
+	public void verificaResultado(String timeAdiversario, String resultado, LocalDate dataJogo, int golsFeitos,
+			int golsSofridos) {
+
+		if (rootPaneCheckingEnabled) {
+
+		}
+
+		if (resultado.equals("Vitoria")) {
+			if (golsFeitos > golsSofridos) {
+				inserirJogoBd(timeAdiversario, resultado, dataJogo, golsFeitos, golsSofridos);
+				inserirEstatisticasJogador();
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"O numero de gols marcados tem que ser maior que o numero de gols sofridos");
+			}
+		}
+
+		if (resultado.equals("Empate")) {
+			if (golsFeitos == golsSofridos) {
+				inserirJogoBd(timeAdiversario, resultado, dataJogo, golsFeitos, golsSofridos);
+				inserirEstatisticasJogador();
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"O numero de gols marcados tem que ser igual ao numero de gols sofridos");
+			}
+		}
+
+		if (resultado.equals("Derrota")) {
+			if (golsFeitos < golsSofridos) {
+				inserirJogoBd(timeAdiversario, resultado, dataJogo, golsFeitos, golsSofridos);
+				inserirEstatisticasJogador();
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"O numero de gols sofridos tem que ser maior que o numero de gols marcados");
+			}
+		}
+	}
 }
